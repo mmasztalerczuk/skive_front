@@ -25,6 +25,27 @@ Vue.http.interceptors.push(function (request, next) {
   next()
 })
 
+// TODO Add test for this function
+// TODO What if token will be not correct JWT token?
+function parseJwt (token) {
+  var base64Url = token.split('.')[1]
+  var base64 = base64Url.replace('-', '+').replace('_', '/')
+  return JSON.parse(window.atob(base64))
+}
+
+// TODO What is parsedToken will be not correct JWT token?
+router.beforeEach((to, from, next) => {
+  if (localStorage.getItem('JWT') != null) {
+    var parsedToken = parseJwt(localStorage.getItem('JWT'))
+    var expirationDate = new Date(parsedToken['exp'] * 1000)
+    if (new Date().getTime() > expirationDate.getTime()) {
+      localStorage.removeItem('JWT')
+      next('/')
+    }
+  }
+  next()
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
