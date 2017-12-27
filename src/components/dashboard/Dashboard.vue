@@ -1,16 +1,18 @@
 <template>
   <div>
   <b-container fluid>
+    <dashboard-nav></dashboard-nav>
     <b-row>
       <b-col cols="1">
       </b-col>
       <b-col cols="8" class="elo">
         <task-input v-bind:items="items"></task-input>
       </b-col>
+      <b-col>
+      </b-col>
     </b-row>
     <b-row>
       <b-col cols="1">
-        <leftmenu></leftmenu>
       </b-col>
       <b-col cols="4" class="elo2 mytable">
           <div class="form-group" v-for="item in items.filter(active)" v-bind:key="item.id">
@@ -41,10 +43,7 @@
                       <button type="button" class="btn btn-primary" v-on:click="setInactive(item)">Done</button>
                     </b-col>
                   </b-row>
-
                 </b-container>
-
-
               </div>
           </div>
       </b-col>
@@ -56,16 +55,13 @@
 
 <script>
 import DashBoardNav from './dashboardnav/DashBoardNav.vue'
-import Menu from './menu/Menu.vue'
-
 import TaskInput from './taskinput/TaskInput.vue'
 
 export default {
   components: {
     TaskInput,
     'dashboard-nav': DashBoardNav,
-    'task-input': TaskInput,
-    'leftmenu': Menu
+    'task-input': TaskInput
   },
 
   name: 'DashBoard',
