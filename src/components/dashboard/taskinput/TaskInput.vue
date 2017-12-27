@@ -1,11 +1,13 @@
 <template>
-  <form>
-    <div class="form-group">
-      <input class="form-control taskInput" v-model="task_string"
-             v-on:keyup.enter="onEnterClick"
-             placeholder="Enter task description">
-    </div>
-  </form>
+  <b-modal ref="modal1" id="modal1" title="Bootstrap-Vue" @ok="onEnterClick">
+    <form>
+      <div class="form-group">
+        <input class="form-control taskInput" v-model="task_string"
+               v-on:keyup.enter="onEnterClick"
+               placeholder="Enter task description">
+      </div>
+    </form>
+  </b-modal>
 </template>
 
 <script>
@@ -23,6 +25,8 @@
           this.items.push(response.data)
         }, response => {
         })
+        this.$refs.modal1.hide()
+        this.task_string = ''
       }
     }
   }
