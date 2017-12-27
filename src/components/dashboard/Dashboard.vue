@@ -10,45 +10,51 @@
         <b-col>
         </b-col>
       </b-row>
-      <b-row>
-        <b-col cols="1">
-        </b-col>
-        <b-col cols="4" class="elo2 mytable">
-          <div class="form-group" v-for="item in items.filter(active)" v-bind:key="item.id">
-            <h5>
-              <b-badge variant="primary" v-for="hash in item.hash" :key="hash">
-                {{ hash }}
-              </b-badge>
-            </h5>
-            <div class="myinput2">
-              <b-container class="bv-example-row" fluid>
-                <b-row>
-                  <b-col cols="2">
-                    <button type="button" class="btn btn-info btn-circle btn-lg"></button>
-                  </b-col>
-                  <b-col cols="8">
+      <div class="form-group" v-for="item in Array.from(projects)" v-bind:key="item.id">
+        <b-row>
+          <b-col cols="1">
+            {{ item }}
+          </b-col>
+          <b-col cols="4">
+            <div class="form-group" v-for="inside_item in items.filter(active)" v-bind:key="item.id">
+              <div v-if="item == inside_item.project">
+                <h5>
+                  <b-badge variant="primary" v-for="hash in item.hash" :key="hash">
+                    {{ hash }}
+                  </b-badge>
+                </h5>
+                <div class="myinput2">
+                  <b-container class="bv-example-row" fluid>
                     <b-row>
-                      <b-col cols="12">
-                        {{item.description}}
+                      <b-col cols="2">
+                        <button type="button" class="btn btn-info btn-circle btn-lg"></button>
+                      </b-col>
+                      <b-col cols="8">
+                        <b-row>
+                          <b-col cols="12">
+                            {{inside_item.description}}
+                          </b-col>
+                        </b-row>
+                        <b-row class="smalltxt">
+                          <b-col cols="12">
+                            {{inside_item.project}}
+                          </b-col>
+                        </b-row>
+                      </b-col>
+                      <b-col cols="2">
+                        <button type="button" class="btn btn-primary" v-on:click="setInactive(inside_item)">Done
+                        </button>
                       </b-col>
                     </b-row>
-                    <b-row class="smalltxt">
-                      <b-col cols="12">
-                        {{item.description}}
-                      </b-col>
-                    </b-row>
-                  </b-col>
-                  <b-col cols="2">
-                    <button type="button" class="btn btn-primary" v-on:click="setInactive(item)">Done</button>
-                  </b-col>
-                </b-row>
-              </b-container>
+                  </b-container>
+                </div>
+              </div>
             </div>
-          </div>
-        </b-col>
-        <b-col col>
-        </b-col>
-      </b-row>
+          </b-col>
+          <b-col col>
+          </b-col>
+        </b-row>
+      </div>
       <b-row>
         <b-col>
           <b-btn v-b-modal.modal1 type="button" class="btn btn-primary fixed-bottom" data-toggle="modal"
@@ -82,7 +88,8 @@
           actions: {label: ' '},
           description: {label: 'Description', thClass: 'col-11'}
         },
-        items: []
+        items: [],
+        projects: new Set()
       }
     },
     methods: {
@@ -122,7 +129,12 @@
         var array = JSON.parse(response.data)
         for (let s of array) {
           this.items.push(s)
+          if (s.active) {
+            this.projects.add(s.project)
+          }
         }
+        this.projects = Array.from(this.projects)
+        for (let item of this.projects) console.log(item)
       }, response => {
       })
     }
@@ -132,6 +144,10 @@
 <style>
   body {
     background: #d9d9d9;
+  }
+
+  .form-group {
+    margin-bottom: 0;
   }
 
   .myinput2 {
